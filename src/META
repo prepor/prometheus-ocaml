@@ -1,0 +1,11 @@
+# OASIS_START
+# DO NOT EDIT (digest: bfa06b21a444e90a03940c58d95d1d2b)
+version = "0.1"
+description = "Prometheus client library"
+archive(byte) = "prometheus.cma"
+archive(byte, plugin) = "prometheus.cma"
+archive(native) = "prometheus.cmxa"
+archive(native, plugin) = "prometheus.cmxs"
+exists_if = "prometheus.cma"
+# OASIS_STOP
+

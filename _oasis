@@ -1,0 +1,26 @@
+Name: prometheus
+Version: 0.1
+Synopsis: Prometheus client library
+Authors: Andrew Rudenlp <ceo@prepor.ru>
+License: LGPL with OCaml linking exception
+
+Description: Prometheus client library
+Homepage: http://github.com/prepor/prometheus-ocaml
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+Library prometheus
+  Path: src
+  Modules: Prometheus
+
+Executable test_prometheus
+    BuildDepends: oUnit (>= 2.0), prometheus
+    Install: false
+    MainIs: suite.ml
+    Path: tests/
+
+Test main
+    Command: $test_prometheus
+    TestTools: test_prometheus
+    WorkingDirectory: tests/

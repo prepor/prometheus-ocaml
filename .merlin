@@ -1,0 +1,8 @@
+PKG lwt batteries ounit
+
+S src
+B _build/src
+
+B _build/scheduler
+
+FLG -short-paths
