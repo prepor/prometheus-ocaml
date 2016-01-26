@@ -1,0 +1,18 @@
+opam-version: "1.2"
+name: "prometheus"
+version: "0.1.1"
+maintainer: "Andrew Rudenko <ceo@prepor.ru>"
+authors: "Andrew Rudenko <ceo@prepor.ru>"
+homepage: "http://github.com/prepor/prometheus-ocaml"
+license: "MIT"
+bug-reports: "http://github.com/prepor/prometheus-ocaml/issues"
+dev-repo: "http://github.com/prepor/prometheus-ocaml"
+build: [
+  ["./configure" "--prefix=%{prefix}%"]
+  [make]
+]
+install: [make "install"]
+remove: ["ocamlfind" "remove" "prometheus"]
+depends: [
+  "ocamlfind" {build}  
+]
