@@ -111,7 +111,7 @@ module Histogram = struct
     counts: (float * float ref) list
   }
 
-  let expose_type = "historgram"
+  let expose_type = "histogram"
   include Make_metric(struct
       type t = instance
       type args = float list
@@ -239,26 +239,28 @@ module Registry = struct
 
   let expose_labels labels =
     if List.length labels > 0 then
-      "{" ^ String.concat "," (List.map (fun (k, v) -> k ^ "=" ^ v) labels) ^ "}"
+      "{" ^ String.concat "," (List.map (fun (k, v) -> k ^ "=\"" ^ v ^ "\"") labels) ^ "}"
     else ""
 
   let expose t =
     let buf = Buffer.create 1024 in
     let each_instance name labels {CollectedInstance.addition_labels; suffix; value} =
       let labels' = (expose_labels (List.concat [labels; addition_labels])) in
-      let s = (name ^ labels' ^ " " ^ (string_of_float value) ^ "\n") in
+      let name' = match suffix with
+        | Some v -> name ^ "_" ^ v
+        | None -> name in
+      let s = (name' ^ labels' ^ " " ^ (string_of_float value) ^ "\n") in
       Buffer.add_bytes buf s in
     let each_value type_ name help (labels, instances) =
-      Buffer.add_bytes buf ("# TYPE " ^ name ^ " " ^ type_ ^ "\n");
-      (match help with
-       | Some v -> Buffer.add_bytes buf ("# HELP " ^ name ^ "\n")
-       | None -> ());
-      if (List.length instances > 0) then
-        List.iter (each_instance name labels) instances in
+      List.iter (each_instance name labels) instances in
     let each_metric _ (type_, collector) =
       let {Value.values; name; help} = collector () in
       if (List.length values > 0) then
-        List.iter (each_value type_ name help) values in
+        (Buffer.add_bytes buf ("# TYPE " ^ name ^ " " ^ type_ ^ "\n");
+         (match help with
+          | Some v -> Buffer.add_bytes buf ("# HELP " ^ name ^ "\n")
+          | None -> ());
+         List.iter (each_value type_ name help) values) in
     Hashtbl.iter each_metric t.metrics;
     Buffer.contents buf
 end

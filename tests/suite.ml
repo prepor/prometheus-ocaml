@@ -9,7 +9,7 @@ let counter_test ctx =
      Prometheus.Counter.inc c1;
      let res = Prometheus.Registry.expose r in
      assert_equal res "# TYPE main counter\n\
-                       main{path=root} 2.\n"
+                       main{path=\"root\"} 2.\n"
    | `Bad_label -> assert_failure "Bad label"
    | `Error str -> assert_failure str);
   let counter = Prometheus.Registry.counter r ~name: "main" ~help: None ~labels: ["path"] in
@@ -27,16 +27,16 @@ let histogram_test ctx =
     Prometheus.Histogram.observe v 30.0;
     Prometheus.Histogram.observe v 250.0;
     let res = Prometheus.Registry.expose r in
-    assert_equal res "# TYPE main historgram\n\
-                      main{path=root,le=1.} 0.\n\
-                      main{path=root,le=5.} 0.\n\
-                      main{path=root,le=10.} 0.\n\
-                      main{path=root,le=50.} 1.\n\
-                      main{path=root,le=100.} 1.\n\
-                      main{path=root,le=300.} 2.\n\
-                      main{path=root,le=+Inf} 2.\n\
-                      main{path=root} 2.\n\
-                      main{path=root} 280.\n"
+    assert_equal res "# TYPE main histogram\n\
+                      main_bucket{path=\"root\",le=\"1.\"} 0.\n\
+                      main_bucket{path=\"root\",le=\"5.\"} 0.\n\
+                      main_bucket{path=\"root\",le=\"10.\"} 0.\n\
+                      main_bucket{path=\"root\",le=\"50.\"} 1.\n\
+                      main_bucket{path=\"root\",le=\"100.\"} 1.\n\
+                      main_bucket{path=\"root\",le=\"300.\"} 2.\n\
+                      main_bucket{path=\"root\",le=\"+Inf\"} 2.\n\
+                      main_count{path=\"root\"} 2.\n\
+                      main_sum{path=\"root\"} 280.\n"
   | `Bad_label -> assert_failure "Bad label"
   | `Error str -> assert_failure str
 
