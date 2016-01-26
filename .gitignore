@@ -1,5 +1,6 @@
 /_build/
 *.mldylib
 *.mllib
-/setup.*
+/setup.data
+/setup.log
 /suite.byte
